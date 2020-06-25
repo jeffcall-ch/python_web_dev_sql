@@ -1,31 +1,65 @@
 # this script sets clones a git repo
 # sets up env environment
-# upgrades pip
-# installs flake8
+#   - upgrades pip
+#   - installs flake8 
 
 import subprocess
 import pathlib
+import platform
+
 
 # input
 git_repo = "https://github.com/jeffcall-ch/test"
-proxy = " -- proxy https://148.64.11.164:8080 "
+proxy = "--proxy https://148.64.11.164:8080"
 
-
+# variables
 git_repo_name = git_repo.split("/")[-1]
-print("Git repo name is:  " + git_repo_name)
+pytho_repo_home = pathlib.Path.home() / "Python" / "Python_repos"
+current_repo_folder = pytho_repo_home / git_repo_name
+env_folder = current_repo_folder / "env"
+env_script_folder = env_folder / "Scripts"
+requirements_file = current_repo_folder / "requirements.txt"
+env_pip = env_script_folder / "pip"
+env_python = env_script_folder / "python"
 
-git_repo_home_folder = pathlib.Path.home() / "Python" / "Python_repos"
-git_repo_folder = git_repo_home_folder / git_repo_name
-env_script_folder = git_repo_folder / "env" / "Scripts"
+print(platform.system())
 
-print(git_repo_home_folder)
 
-subprocess.call('dir', cwd=str(git_repo_home_folder), shell=True)
-# subprocess.call('git clone ' + git_repo, cwd=str(git_repo_home_folder), shell=True)
+def main():
+    set_operating_system()
+    create_folders()
+    create_venv()
+    install_packages() 
 
-subprocess.call('mkdir env', cwd=str(git_repo_folder), shell=True)
 
-subprocess.call('./env/Scripts/Activate.ps1', cwd=str(git_repo_folder), shell=True)
-subprocess.call('dir', cwd=str(git_repo_folder), shell=True)
+def set_operating_system():
+    if platform.system() is not "Windows":
+        pass
 
-# activate env
+
+def create_folders():
+    if not current_repo_folder.exists():
+        subprocess.call('git clone ' + git_repo, cwd=str(pytho_repo_home), shell=True)
+    if not env_folder.exists():
+        subprocess.call('mkdir env', cwd=str(current_repo_folder), shell=True)
+
+
+def create_venv():
+    if not env_script_folder.exists():
+        subprocess.call(f'python -m venv {env_folder}', cwd=str(current_repo_folder), shell=True)
+
+
+def install_packages():
+    # upgrade pip to latest
+    subprocess.call(f'{env_pip} {proxy} install --upgrade pip', cwd=str(current_repo_folder), shell=True)
+    
+    # install all from requirements.txt
+    if requirements_file.exists():
+        subprocess.call(f'{env_pip} {proxy} install -r requirements.txt', cwd=str(current_repo_folder), shell=True)
+    
+    # install additional packages
+    subprocess.call(f'{env_pip} {proxy} install -U flake8', cwd=str(current_repo_folder), shell=True)
+
+
+if __name__ == "__main__":
+    main()
