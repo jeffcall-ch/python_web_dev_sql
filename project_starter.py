@@ -19,8 +19,8 @@ current_repo_folder = pytho_repo_home / git_repo_name
 env_folder = current_repo_folder / "env"
 env_script_folder = env_folder / "Scripts"
 requirements_file = current_repo_folder / "requirements.txt"
-env_pip = env_script_folder / "pip"
-env_python = env_script_folder / "python"
+win_pip_exec = env_script_folder / "pip"
+win_python_exec = env_script_folder / "python"
 
 print(platform.system())
 
@@ -33,7 +33,7 @@ def main():
 
 
 def set_operating_system():
-    if platform.system() is not "Windows":
+    if platform.system().lower is not "windows":
         pass
 
 
@@ -44,6 +44,8 @@ def create_folders():
         subprocess.call('mkdir env', cwd=str(current_repo_folder), shell=True)
 
 
+windows_commands = 
+
 def create_venv():
     if not env_script_folder.exists():
         subprocess.call(f'python -m venv {env_folder}', cwd=str(current_repo_folder), shell=True)
@@ -51,14 +53,14 @@ def create_venv():
 
 def install_packages():
     # upgrade pip to latest
-    subprocess.call(f'{env_pip} {proxy} install --upgrade pip', cwd=str(current_repo_folder), shell=True)
+    subprocess.call(f'{win_pip_exec} {proxy} install --upgrade pip', cwd=str(current_repo_folder), shell=True)
     
     # install all from requirements.txt
     if requirements_file.exists():
-        subprocess.call(f'{env_pip} {proxy} install -r requirements.txt', cwd=str(current_repo_folder), shell=True)
+        subprocess.call(f'{win_pip_exec} {proxy} install -r requirements.txt', cwd=str(current_repo_folder), shell=True)
     
     # install additional packages
-    subprocess.call(f'{env_pip} {proxy} install -U flake8', cwd=str(current_repo_folder), shell=True)
+    subprocess.call(f'{win_pip_exec} {proxy} install -U flake8', cwd=str(current_repo_folder), shell=True)
 
 
 if __name__ == "__main__":
