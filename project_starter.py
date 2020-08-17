@@ -9,7 +9,7 @@ import platform
 
 
 # input
-git_repo = "https://github.com/jeffcall-ch/test"
+git_repo = "https://github.com/jeffcall-ch/excel_bom_compare"
 proxy = "--proxy https://148.64.11.164:8080"
 
 # variables
@@ -26,25 +26,15 @@ print(platform.system())
 
 
 def main():
-    set_operating_system()
     create_folders()
     create_venv()
     install_packages() 
-
-
-def set_operating_system():
-    if platform.system().lower is not "windows":
-        pass
-
 
 def create_folders():
     if not current_repo_folder.exists():
         subprocess.call('git clone ' + git_repo, cwd=str(pytho_repo_home), shell=True)
     if not env_folder.exists():
         subprocess.call('mkdir env', cwd=str(current_repo_folder), shell=True)
-
-
-windows_commands = 
 
 def create_venv():
     if not env_script_folder.exists():
